@@ -1,0 +1,510 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Stonewood Email Review - Interactive Action Dashboard</title>
+  <style>
+    :root{
+      --bg:#0b1020;
+      --panel:#121a30;
+      --panel-2:#18233f;
+      --text:#e8eefc;
+      --muted:#a7b4d6;
+      --line:#2a3962;
+      --red:#ff6b6b;
+      --amber:#f7b955;
+      --green:#44d17a;
+      --blue:#6ea8fe;
+      --chip:#22325a;
+      --shadow:0 10px 30px rgba(0,0,0,.25);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+      background:linear-gradient(180deg,#09101d 0%, #0f1730 100%);
+      color:var(--text);
+    }
+    .wrap{max-width:1440px;margin:0 auto;padding:28px 20px 80px}
+    h1,h2,h3{margin:0 0 10px}
+    p{margin:0 0 10px;color:var(--muted);line-height:1.5}
+    .hero{
+      background:linear-gradient(135deg,#17264c,#0f1730 60%,#1c2d59);
+      border:1px solid var(--line);
+      border-radius:18px;
+      padding:24px;
+      box-shadow:var(--shadow);
+      margin-bottom:18px;
+    }
+    .sub{display:flex;gap:12px;flex-wrap:wrap;margin-top:10px}
+    .tag{
+      background:var(--chip);
+      color:var(--text);
+      border:1px solid var(--line);
+      padding:8px 12px;
+      border-radius:999px;
+      font-size:13px;
+    }
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(12,1fr);
+      gap:16px;
+    }
+    .card{
+      background:rgba(18,26,48,.95);
+      border:1px solid var(--line);
+      border-radius:16px;
+      padding:18px;
+      box-shadow:var(--shadow);
+    }
+    .kpi{grid-column:span 3}
+    .kpi .num{font-size:34px;font-weight:800;margin:8px 0 4px}
+    .kpi small{color:var(--muted)}
+    .section{grid-column:span 12}
+    .filters{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin:10px 0 18px;
+      align-items:center;
+    }
+    select,input{
+      background:var(--panel-2);
+      color:var(--text);
+      border:1px solid var(--line);
+      border-radius:10px;
+      padding:10px 12px;
+      min-width:180px;
+    }
+    .btn{
+      background:var(--blue);
+      color:#08101d;
+      border:none;
+      padding:10px 14px;
+      border-radius:10px;
+      font-weight:700;
+      cursor:pointer;
+    }
+    .btn.secondary{
+      background:transparent;
+      color:var(--text);
+      border:1px solid var(--line);
+    }
+    .priority{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:6px 10px;
+      border-radius:999px;
+      font-size:12px;
+      font-weight:700;
+      border:1px solid transparent;
+    }
+    .red{background:rgba(255,107,107,.12); color:#ff9696; border-color:rgba(255,107,107,.35)}
+    .amber{background:rgba(247,185,85,.12); color:#ffd27f; border-color:rgba(247,185,85,.35)}
+    .green{background:rgba(68,209,122,.12); color:#7ff0a7; border-color:rgba(68,209,122,.35)}
+    .owner{
+      display:inline-block;
+      background:var(--chip);
+      border:1px solid var(--line);
+      color:var(--text);
+      padding:6px 10px;
+      border-radius:999px;
+      font-size:12px;
+      margin:4px 6px 0 0;
+    }
+    .task-grid{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:14px;
+    }
+    .task{
+      background:var(--panel);
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:16px;
+    }
+    .task h4{margin:0 0 8px;font-size:16px}
+    .task ul{margin:8px 0 0 18px;color:var(--muted)}
+    .task li{margin:6px 0}
+    details{
+      background:var(--panel);
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:14px 16px;
+      margin-bottom:12px;
+    }
+    summary{
+      cursor:pointer;
+      list-style:none;
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      align-items:center;
+      font-weight:700;
+    }
+    summary::-webkit-details-marker{display:none}
+    .split{
+      display:grid;
+      grid-template-columns:1.1fr .9fr;
+      gap:16px;
+    }
+    .small{font-size:13px}
+    .muted{color:var(--muted)}
+    .quote{
+      border-left:3px solid var(--blue);
+      padding-left:10px;
+      color:var(--muted);
+      margin-top:10px;
+    }
+    .timeline{
+      display:grid;
+      gap:10px;
+    }
+    .timeitem{
+      border-left:3px solid var(--line);
+      padding-left:12px;
+    }
+    .footer{
+      margin-top:24px;
+      color:var(--muted);
+      font-size:12px;
+      text-align:center;
+    }
+    @media (max-width:1100px){
+      .kpi{grid-column:span 6}
+      .task-grid{grid-template-columns:repeat(2,1fr)}
+      .split{grid-template-columns:1fr}
+    }
+    @media (max-width:700px){
+      .kpi,.section{grid-column:span 12}
+      .task-grid{grid-template-columns:1fr}
+      .wrap{padding:18px 14px 60px}
+    }
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <div class="hero">
+    <h1>Stonewood Email Review — Interactive Action Dashboard</h1>
+    <p>Last 30 days email summary converted into a management dashboard for decision-making, delegation, and execution control.</p>
+    <div class="sub">
+      <span class="tag">Focus: capital, risk, execution, ownership</span>
+      <span class="tag">Main issue: over-centralisation</span>
+      <span class="tag">Use: weekly operating review</span>
+    </div>
+  </div>
+
+  <div class="grid">
+    <div class="card kpi">
+      <small>Operating theatres</small>
+      <div class="num">5</div>
+      <p>280QS close-out, refinance, cash/finance control, Wellington redevelopment, legal/hiring cleanup.</p>
+    </div>
+    <div class="card kpi">
+      <small>Red items</small>
+      <div class="num">5</div>
+      <p>Radisson payment, insurance CP, 280QS defects, Concur backlog, Willis Street deadlines.</p>
+    </div>
+    <div class="card kpi">
+      <small>Primary weakness</small>
+      <div class="num">1</div>
+      <p>Too many decisions and reconciliations still escalate to John and Michael.</p>
+    </div>
+    <div class="card kpi">
+      <small>Immediate requirement</small>
+      <div class="num">10</div>
+      <p>Named owners, hard deadlines, one action register, no orphan tasks.</p>
+    </div>
+
+    <div class="card section">
+      <h2>Priority view</h2>
+      <div class="task-grid" id="priorityGrid">
+        <div class="task" data-priority="Red" data-owner="Vicki,Dao,Blair">
+          <span class="priority red">Red</span>
+          <h4>Radisson NZ$150k marketing contribution overdue</h4>
+          <p class="small">Commercially unacceptable. Needs payment status, accountability and comms owner.</p>
+          <div class="owner">Vicki</div><div class="owner">Dao</div><div class="owner">Blair</div>
+        </div>
+        <div class="task" data-priority="Red" data-owner="Dao">
+          <span class="priority red">Red</span>
+          <h4>Insurance CP blocker on refinance</h4>
+          <p class="small">Bank appetite is there. Technical close is now the risk point.</p>
+          <div class="owner">Dao</div>
+        </div>
+        <div class="task" data-priority="Red" data-owner="Vicki,Israel,Min">
+          <span class="priority red">Red</span>
+          <h4>280QS close-out friction</h4>
+          <p class="small">Headboards, access constraints, waterproofing delay and defect completion still live.</p>
+          <div class="owner">Vicki</div><div class="owner">Israel</div><div class="owner">Min</div>
+        </div>
+        <div class="task" data-priority="Red" data-owner="Dao,Blair">
+          <span class="priority red">Red</span>
+          <h4>Concur approvals backlog</h4>
+          <p class="small">Control failure. Founders should not be the cleanup mechanism.</p>
+          <div class="owner">Dao</div><div class="owner">Blair</div>
+        </div>
+        <div class="task" data-priority="Red" data-owner="AJ,Paul,Michael">
+          <span class="priority red">Red</span>
+          <h4>Willis Street EV redevelopment deadlines near-term</h4>
+          <p class="small">Must move from long email instructions to programme-led execution.</p>
+          <div class="owner">AJ</div><div class="owner">Paul</div><div class="owner">Michael</div>
+        </div>
+        <div class="task" data-priority="Amber" data-owner="Max,Blair">
+          <span class="priority amber">Amber</span>
+          <h4>Radisson key-money sign-off wording</h4>
+          <p class="small">Finance must only sign what Finance actually controls.</p>
+          <div class="owner">Max</div><div class="owner">Blair</div>
+        </div>
+        <div class="task" data-priority="Amber" data-owner="Max">
+          <span class="priority amber">Amber</span>
+          <h4>Uncle Man lease liability clause</h4>
+          <p class="small">Public liability at $500k is below Stonewood standard. Fix to $10m minimum.</p>
+          <div class="owner">Max</div>
+        </div>
+        <div class="task" data-priority="Green" data-owner="Dao">
+          <span class="priority green">Green</span>
+          <h4>Balmain settlement completed</h4>
+          <p class="small">Mortgage discharged and titles released. Now convert into clean cash reporting.</p>
+          <div class="owner">Dao</div>
+        </div>
+        <div class="task" data-priority="Green" data-owner="Israel,Derek">
+          <span class="priority green">Green</span>
+          <h4>RentHQ migration approved</h4>
+          <p class="small">Decision made. Execution plan now required.</p>
+          <div class="owner">Israel</div><div class="owner">Derek</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card section">
+      <h2>Delegation control panel</h2>
+      <div class="filters">
+        <select id="ownerFilter">
+          <option value="All">All owners</option>
+          <option>Dao</option>
+          <option>Blair</option>
+          <option>Vicki</option>
+          <option>Max</option>
+          <option>Israel</option>
+          <option>AJ</option>
+          <option>Paul</option>
+          <option>Derek</option>
+          <option>Esther</option>
+          <option>Ava</option>
+          <option>John</option>
+          <option>Michael</option>
+        </select>
+        <select id="priorityFilter">
+          <option value="All">All priorities</option>
+          <option>Red</option>
+          <option>Amber</option>
+          <option>Green</option>
+        </select>
+        <input id="searchBox" placeholder="Search task, owner or deliverable" />
+        <button class="btn" onclick="applyFilters()">Apply</button>
+        <button class="btn secondary" onclick="resetFilters()">Reset</button>
+      </div>
+
+      <div class="task-grid" id="delegationGrid">
+        <div class="task delegate" data-owner="Dao" data-priority="Red" data-text="cash in bank balmain radisson payment concur aged approvals nwc reconciliation">
+          <span class="priority red">Red</span>
+          <h4>Dao Yang — cash, finance execution, control discipline</h4>
+          <p class="small"><strong>Deliverables:</strong> Daily cash report for 10 business days; aged Concur approvals by owner; Radisson payment tracker; NWC reconciliation note.</p>
+          <div class="quote">Deadline: first pack by 10am Monday</div>
+        </div>
+        <div class="task delegate" data-owner="Blair" data-priority="Amber" data-text="radisson sign-off finance controls entity usage recurring approval leak">
+          <span class="priority amber">Amber</span>
+          <h4>Blair Bridgford — finance governance and boundary control</h4>
+          <p class="small"><strong>Deliverables:</strong> Revised Radisson sign-off memo; controls gap list; monthly finance sign-off framework.</p>
+          <div class="quote">Deadline: Tuesday 12pm</div>
+        </div>
+        <div class="task delegate" data-owner="Vicki" data-priority="Red" data-text="280qs close-out defects access blockers headboards waterproofing radisson credits iwg aka rooftop">
+          <span class="priority red">Red</span>
+          <h4>Vicki Chow — 280QS commercial close-out + IWG + Aka</h4>
+          <p class="small"><strong>Deliverables:</strong> 280QS dashboard; IWG negotiation summary; Aka implementation timeline.</p>
+          <div class="quote">Deadline: Monday 4pm</div>
+        </div>
+        <div class="task delegate" data-owner="Max" data-priority="Amber" data-text="uncle man redline iwg legal memo trust resolution">
+          <span class="priority amber">Amber</span>
+          <h4>Max Shin — legal risk filter</h4>
+          <p class="small"><strong>Deliverables:</strong> Uncle Man redline; IWG legal risk memo; trust resolution draft.</p>
+          <div class="quote">Deadline: Tuesday meeting ready</div>
+        </div>
+        <div class="task delegate" data-owner="Israel" data-priority="Green" data-text="renthq migration property operations manager role hotel handover checklist">
+          <span class="priority green">Green</span>
+          <h4>Israel Suarez Guido — hotel ops and tenancy systems</h4>
+          <p class="small"><strong>Deliverables:</strong> RentHQ migration plan; role transition response; hotel operating handover checklist.</p>
+          <div class="quote">Deadline: Tuesday 4pm / Wednesday 12pm</div>
+        </div>
+        <div class="task delegate" data-owner="AJ" data-priority="Red" data-text="willis street mezzanine remediation tenancy schedule termination notices cleaning contract 318 retail">
+          <span class="priority red">Red</span>
+          <h4>AJ Jivan — Willis Street and 318 Retail</h4>
+          <p class="small"><strong>Deliverables:</strong> Mezzanine remediation report; tenancy exit schedule; termination notices; contract exit review; 318 Retail assumptions sheet.</p>
+          <div class="quote">Deadline: 10 March / 20 March / Wednesday</div>
+        </div>
+        <div class="task delegate" data-owner="Paul" data-priority="Red" data-text="ev redevelopment integrated programme design council contractor weekly reporting">
+          <span class="priority red">Red</span>
+          <h4>Paul Garlick — project manager, not passenger</h4>
+          <p class="small"><strong>Deliverables:</strong> One-page integrated project programme with key decisions, risks, cost and timing.</p>
+          <div class="quote">Deadline: Wednesday 5pm</div>
+        </div>
+        <div class="task delegate" data-owner="Derek" data-priority="Green" data-text="318 retail im renthq comms aka visual pack">
+          <span class="priority green">Green</span>
+          <h4>Derek Chow — marketing/systems execution</h4>
+          <p class="small"><strong>Deliverables:</strong> Final 318 Retail IM; RentHQ comms pack; Aka visual implementation pack.</p>
+          <div class="quote">Deadline: Thursday</div>
+        </div>
+        <div class="task delegate" data-owner="Esther" data-priority="Green" data-text="employment contract onboarding checklist approval path">
+          <span class="priority green">Green</span>
+          <h4>Esther Yang — documentation, not decision-making</h4>
+          <p class="small"><strong>Deliverables:</strong> Contract pack; onboarding checklist; approval path after Israel sign-off.</p>
+          <div class="quote">Deadline: within 24 hours of sign-off</div>
+        </div>
+        <div class="task delegate" data-owner="Ava" data-priority="Red" data-text="action register invoice corrections chase owners daily md action register">
+          <span class="priority red">Red</span>
+          <h4>Ava Meneses / Ava Xu — admin control tower</h4>
+          <p class="small"><strong>Deliverables:</strong> Single open action register with task, owner, due date, status and blocker. Daily chase discipline.</p>
+          <div class="quote">Deadline: start Monday</div>
+        </div>
+        <div class="task delegate" data-owner="John" data-priority="Red" data-text="john own refinance insurance radisson posture iwg economics finance hire">
+          <span class="priority red">Red</span>
+          <h4>John — retain only true founder decisions</h4>
+          <p class="small"><strong>Keep:</strong> refinance insurance posture; Radisson commercial tone; final IWG economics/risk appetite; final senior finance hire decision.</p>
+        </div>
+        <div class="task delegate" data-owner="Michael" data-priority="Red" data-text="michael own willis street capital tenant retention exit decision programme accountability">
+          <span class="priority red">Red</span>
+          <h4>Michael — retain only capital deployment decisions</h4>
+          <p class="small"><strong>Keep:</strong> Willis Street capital deployment; final tenant exit/retention calls; final redevelopment accountability.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="section split">
+      <div class="card">
+        <h2>The real management issue</h2>
+        <p>The business is progressing. The inbox does not show paralysis.</p>
+        <p>It shows a harder problem: <strong>execution still gets completed by founder intervention rather than operating system</strong>.</p>
+        <ul>
+          <li>Commercial and legal cleanup still route to you too often.</li>
+          <li>Finance control defects still require founder prompts.</li>
+          <li>Redevelopment work is being launched by email rather than programme control.</li>
+          <li>Too many people are informing. Too few are owning.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h2>What success looks like next week</h2>
+        <div class="timeline">
+          <div class="timeitem">
+            <strong>Monday</strong>
+            <p>Cash pack, 280QS dashboard, action register live.</p>
+          </div>
+          <div class="timeitem">
+            <strong>Tuesday</strong>
+            <p>IWG legal/commercial pack complete; Radisson sign-off wording fixed; Israel role response in.</p>
+          </div>
+          <div class="timeitem">
+            <strong>Wednesday</strong>
+            <p>Paul issues integrated Willis Street redevelopment plan; 318 Retail assumptions closed.</p>
+          </div>
+          <div class="timeitem">
+            <strong>Thursday+</strong>
+            <p>Founders review only exception items, not admin and chase work.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card section">
+      <h2>Collapsible operating summaries</h2>
+
+      <details open>
+        <summary>
+          <span>280 Queen Street / Radisson close-out</span>
+          <span class="priority red">High attention</span>
+        </summary>
+        <p>Major progress has been made, but the job is not cleanly closed.</p>
+        <ul>
+          <li>Practical Completion issued; CCC lodged and rooftop bar still targeting April.</li>
+          <li>Last 10 rooms were confirmed ready to hand over.</li>
+          <li>Remaining friction: headboard colour issue, limited access to some floors, waterproofing slip, overdue marketing contribution.</li>
+        </ul>
+      </details>
+
+      <details>
+        <summary>
+          <span>Refinance / lender CP completion</span>
+          <span class="priority green">Good trajectory</span>
+        </summary>
+        <p>Credit appetite is not the issue. Execution on final technical CPs is the issue, especially insurance.</p>
+      </details>
+
+      <details>
+        <summary>
+          <span>Cash, settlements, and finance control</span>
+          <span class="priority amber">Needs tightening</span>
+        </summary>
+        <p>Balmain settlement is complete, but finance control discipline is still loose around approvals, routing and accountability language.</p>
+      </details>
+
+      <details>
+        <summary>
+          <span>Wellington redevelopment / EV supercharger</span>
+          <span class="priority red">Immediate action</span>
+        </summary>
+        <p>Commercially aggressive and directionally right. Needs one integrated programme owner, not fragmented follow-up emails.</p>
+      </details>
+
+      <details>
+        <summary>
+          <span>Contract/legal cleanup + selective hiring</span>
+          <span class="priority amber">Manageable</span>
+        </summary>
+        <p>Multiple items are valid, but too many of them are still surfacing at MD level instead of being filtered and solved before escalation.</p>
+      </details>
+    </div>
+
+    <div class="card section">
+      <h2>Suggested message set</h2>
+      <p>Use these as hard instructions, not discussion starters.</p>
+      <div class="task-grid">
+        <div class="task"><h4>To Dao</h4><p class="small">By 10am Monday send: cash in bank after Balmain, Radisson payment status, aged Concur approvals by owner, and NWC reconciliation open items.</p></div>
+        <div class="task"><h4>To Blair</h4><p class="small">Rewrite the Radisson sign-off so Finance only signs what it controls. Also issue a one-page controls gap list by Tuesday noon.</p></div>
+        <div class="task"><h4>To Vicki</h4><p class="small">Own 280QS close-out commercially. I want one dashboard by Monday 4pm covering defects, access blockers, headboards, waterproofing, room handover, credits and payment issues.</p></div>
+        <div class="task"><h4>To Max</h4><p class="small">Fix Uncle Man liability cover, complete IWG legal risk review, and prepare trust resolution drafts. Ready for Tuesday meeting.</p></div>
+        <div class="task"><h4>To AJ</h4><p class="small">Treat Willis Street EV as a live project. Tenancy exits, notices, contract review and mezzanine remediation move now. Close 318 Retail assumptions with Derek.</p></div>
+        <div class="task"><h4>To Ava</h4><p class="small">Maintain one live MD action register and chase owners daily. No task goes dark.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">Interactive HTML prepared from the prior email review summary.</div>
+</div>
+
+<script>
+function applyFilters(){
+  const owner = document.getElementById('ownerFilter').value.toLowerCase();
+  const priority = document.getElementById('priorityFilter').value.toLowerCase();
+  const search = document.getElementById('searchBox').value.toLowerCase().trim();
+
+  document.querySelectorAll('.delegate').forEach(el=>{
+    const o = el.dataset.owner.toLowerCase();
+    const p = el.dataset.priority.toLowerCase();
+    const t = el.dataset.text.toLowerCase();
+    const showOwner = owner === 'all' || o.includes(owner);
+    const showPriority = priority === 'all' || p === priority;
+    const showSearch = !search || t.includes(search) || el.innerText.toLowerCase().includes(search);
+    el.style.display = (showOwner && showPriority && showSearch) ? '' : 'none';
+  });
+}
+function resetFilters(){
+  document.getElementById('ownerFilter').value = 'All';
+  document.getElementById('priorityFilter').value = 'All';
+  document.getElementById('searchBox').value = '';
+  applyFilters();
+}
+</script>
+</body>
+</html>
