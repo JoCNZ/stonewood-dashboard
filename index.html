@@ -173,6 +173,151 @@
       font-size:12px;
       text-align:center;
     }
+
+    /* ── AI Assistant Chat Widget ── */
+    .ai-fab{
+      position:fixed;bottom:28px;right:28px;z-index:9999;
+      width:60px;height:60px;border-radius:50%;border:none;cursor:pointer;
+      background:linear-gradient(135deg,#6ea8fe,#a78bfa);
+      box-shadow:0 6px 24px rgba(110,168,254,.45);
+      display:flex;align-items:center;justify-content:center;
+      transition:transform .2s,box-shadow .2s;
+    }
+    .ai-fab:hover{transform:scale(1.08);box-shadow:0 8px 30px rgba(110,168,254,.6)}
+    .ai-fab svg{width:28px;height:28px;fill:#fff;transition:transform .3s}
+    .ai-fab.open svg{transform:rotate(90deg)}
+
+    .ai-panel{
+      position:fixed;bottom:100px;right:28px;z-index:9998;
+      width:420px;max-height:600px;
+      background:var(--panel);
+      border:1px solid var(--line);
+      border-radius:20px;
+      box-shadow:0 20px 60px rgba(0,0,0,.5);
+      display:flex;flex-direction:column;
+      opacity:0;transform:translateY(20px) scale(.96);
+      pointer-events:none;
+      transition:opacity .25s,transform .25s;
+    }
+    .ai-panel.visible{
+      opacity:1;transform:translateY(0) scale(1);pointer-events:auto;
+    }
+    .ai-header{
+      padding:16px 20px;
+      border-bottom:1px solid var(--line);
+      display:flex;align-items:center;gap:12px;
+    }
+    .ai-header-dot{
+      width:10px;height:10px;border-radius:50%;
+      background:var(--green);
+      box-shadow:0 0 8px rgba(68,209,122,.5);
+      animation:pulse-dot 2s infinite;
+    }
+    @keyframes pulse-dot{0%,100%{opacity:1}50%{opacity:.4}}
+    .ai-header h3{margin:0;font-size:15px;font-weight:700}
+    .ai-header small{color:var(--muted);font-size:12px}
+
+    .ai-messages{
+      flex:1;overflow-y:auto;padding:16px 20px;
+      display:flex;flex-direction:column;gap:12px;
+      min-height:300px;max-height:420px;
+    }
+    .ai-messages::-webkit-scrollbar{width:5px}
+    .ai-messages::-webkit-scrollbar-thumb{background:var(--line);border-radius:10px}
+
+    .ai-msg{
+      max-width:85%;padding:12px 16px;border-radius:16px;
+      font-size:14px;line-height:1.55;word-wrap:break-word;
+      animation:msg-in .25s ease-out;
+    }
+    @keyframes msg-in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+    .ai-msg.assistant{
+      align-self:flex-start;
+      background:var(--panel-2);
+      border:1px solid var(--line);
+      border-bottom-left-radius:4px;
+      color:var(--text);
+    }
+    .ai-msg.user{
+      align-self:flex-end;
+      background:linear-gradient(135deg,#2a4a8a,#1e3a6e);
+      border:1px solid rgba(110,168,254,.3);
+      border-bottom-right-radius:4px;
+      color:#e8eefc;
+    }
+    .ai-msg.assistant strong{color:var(--blue)}
+    .ai-msg.assistant code{
+      background:rgba(110,168,254,.12);padding:2px 6px;border-radius:4px;
+      font-size:13px;color:var(--blue);
+    }
+
+    .ai-typing{
+      align-self:flex-start;padding:12px 16px;
+      background:var(--panel-2);border:1px solid var(--line);
+      border-radius:16px;border-bottom-left-radius:4px;
+      display:none;gap:5px;align-items:center;
+    }
+    .ai-typing.active{display:flex}
+    .ai-typing span{
+      width:7px;height:7px;border-radius:50%;background:var(--muted);
+      animation:typing .8s infinite;
+    }
+    .ai-typing span:nth-child(2){animation-delay:.15s}
+    .ai-typing span:nth-child(3){animation-delay:.3s}
+    @keyframes typing{0%,60%,100%{opacity:.3;transform:translateY(0)}30%{opacity:1;transform:translateY(-4px)}}
+
+    .ai-input-row{
+      padding:12px 16px;border-top:1px solid var(--line);
+      display:flex;gap:10px;align-items:center;
+    }
+    .ai-input-row input{
+      flex:1;background:var(--panel-2);color:var(--text);
+      border:1px solid var(--line);border-radius:12px;
+      padding:12px 14px;font-size:14px;min-width:0;
+      transition:border-color .2s;
+    }
+    .ai-input-row input:focus{outline:none;border-color:var(--blue)}
+    .ai-input-row input::placeholder{color:var(--muted)}
+    .ai-send{
+      width:40px;height:40px;border-radius:12px;border:none;cursor:pointer;
+      background:linear-gradient(135deg,#6ea8fe,#a78bfa);
+      display:flex;align-items:center;justify-content:center;
+      transition:transform .15s;flex-shrink:0;
+    }
+    .ai-send:hover{transform:scale(1.05)}
+    .ai-send:disabled{opacity:.4;cursor:not-allowed;transform:none}
+    .ai-send svg{width:18px;height:18px;fill:#fff}
+
+    .ai-setup{
+      padding:16px 20px;display:flex;flex-direction:column;gap:10px;
+    }
+    .ai-setup label{font-size:13px;color:var(--muted)}
+    .ai-setup input{
+      background:var(--panel-2);color:var(--text);border:1px solid var(--line);
+      border-radius:10px;padding:10px 12px;font-size:13px;width:100%;
+    }
+    .ai-setup input:focus{outline:none;border-color:var(--blue)}
+    .ai-setup .ai-connect-btn{
+      background:linear-gradient(135deg,#6ea8fe,#a78bfa);
+      color:#fff;border:none;border-radius:10px;padding:10px;
+      font-weight:700;font-size:14px;cursor:pointer;
+      transition:transform .15s;
+    }
+    .ai-setup .ai-connect-btn:hover{transform:scale(1.02)}
+    .ai-quick-actions{
+      display:flex;flex-wrap:wrap;gap:6px;padding:0 20px 12px;
+    }
+    .ai-quick{
+      background:var(--chip);border:1px solid var(--line);color:var(--muted);
+      padding:6px 12px;border-radius:999px;font-size:12px;cursor:pointer;
+      transition:border-color .2s,color .2s;
+    }
+    .ai-quick:hover{border-color:var(--blue);color:var(--text)}
+
+    @media(max-width:500px){
+      .ai-panel{width:calc(100vw - 24px);right:12px;bottom:90px;max-height:70vh}
+      .ai-fab{bottom:18px;right:18px;width:52px;height:52px}
+    }
     @media (max-width:1100px){
       .kpi{grid-column:span 6}
       .task-grid{grid-template-columns:repeat(2,1fr)}
@@ -483,7 +628,331 @@
   <div class="footer">Interactive HTML prepared from the prior email review summary.</div>
 </div>
 
+<!-- ── AI Assistant Agent Widget ── -->
+<button class="ai-fab" id="aiFab" title="AI Assistant Agent">
+  <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12c0 1.74.5 3.37 1.35 4.75L2 22l5.25-1.35C8.63 21.5 10.26 22 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm-1 15h-1.5v-6H11v6zm3 0h-1.5v-6H14v6zm-5-8c0-.83.67-1.5 1.5-1.5h3c.83 0 1.5.67 1.5 1.5H9z"/></svg>
+</button>
+
+<div class="ai-panel" id="aiPanel">
+  <div class="ai-header">
+    <div class="ai-header-dot"></div>
+    <div>
+      <h3>Stonewood AI Agent</h3>
+      <small>Dispatch tasks in plain English</small>
+    </div>
+  </div>
+
+  <div class="ai-setup" id="aiSetup">
+    <label>Enter your Anthropic API key to connect:</label>
+    <input type="password" id="aiApiKey" placeholder="sk-ant-..." />
+    <button class="ai-connect-btn" onclick="connectAgent()">Connect Agent</button>
+    <small style="color:var(--muted);font-size:11px;text-align:center">Key stays in your browser only. Never sent anywhere else.</small>
+  </div>
+
+  <div class="ai-messages" id="aiMessages" style="display:none">
+    <div class="ai-msg assistant">
+      <strong>Stonewood AI Agent online.</strong><br/>
+      I have full context of your dashboard — tasks, owners, priorities, and deadlines. Tell me what to do in plain English.<br/><br/>
+      Try: <em>"Show me all red items for Dao"</em> or <em>"Draft a follow-up message to Paul about Willis Street"</em>
+    </div>
+  </div>
+
+  <div class="ai-typing" id="aiTyping">
+    <span></span><span></span><span></span>
+  </div>
+
+  <div class="ai-quick-actions" id="aiQuickActions" style="display:none">
+    <button class="ai-quick" onclick="sendQuick('Show all red priority items')">Red items</button>
+    <button class="ai-quick" onclick="sendQuick('Summarise this week\'s deadlines')">Deadlines</button>
+    <button class="ai-quick" onclick="sendQuick('Who has the most tasks?')">Workload</button>
+    <button class="ai-quick" onclick="sendQuick('Draft a status update email for the founders')">Status email</button>
+    <button class="ai-quick" onclick="sendQuick('What are the biggest risks right now?')">Top risks</button>
+  </div>
+
+  <div class="ai-input-row" id="aiInputRow" style="display:none">
+    <input type="text" id="aiInput" placeholder="Tell the agent what to do..." />
+    <button class="ai-send" id="aiSendBtn" onclick="sendMessage()">
+      <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+    </button>
+  </div>
+</div>
+
 <script>
+/* ── AI Assistant Agent ── */
+(function(){
+  const fab = document.getElementById('aiFab');
+  const panel = document.getElementById('aiPanel');
+  const setup = document.getElementById('aiSetup');
+  const msgs = document.getElementById('aiMessages');
+  const quickActions = document.getElementById('aiQuickActions');
+  const inputRow = document.getElementById('aiInputRow');
+  const input = document.getElementById('aiInput');
+  const sendBtn = document.getElementById('aiSendBtn');
+  const typing = document.getElementById('aiTyping');
+  let apiKey = '';
+  let conversationHistory = [];
+
+  fab.addEventListener('click', ()=>{
+    const open = panel.classList.toggle('visible');
+    fab.classList.toggle('open', open);
+    if(open && apiKey) input.focus();
+  });
+
+  input.addEventListener('keydown', e=>{
+    if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); sendMessage(); }
+  });
+
+  window.connectAgent = function(){
+    const key = document.getElementById('aiApiKey').value.trim();
+    if(!key){ alert('Please enter your Anthropic API key.'); return; }
+    apiKey = key;
+    setup.style.display='none';
+    msgs.style.display='flex';
+    quickActions.style.display='flex';
+    inputRow.style.display='flex';
+    input.focus();
+  };
+
+  window.sendQuick = function(text){
+    input.value = text;
+    sendMessage();
+  };
+
+  window.sendMessage = async function(){
+    const text = input.value.trim();
+    if(!text) return;
+    addMsg('user', text);
+    input.value='';
+    sendBtn.disabled=true;
+
+    // Check for local agent actions first
+    const action = detectAction(text);
+    if(action) executeAction(action);
+
+    // Send to Claude API for intelligent response
+    conversationHistory.push({role:'user', content: text});
+    typing.classList.add('active');
+    scrollMsgs();
+
+    try{
+      const dashboardContext = extractDashboardContext();
+      const systemPrompt = `You are the Stonewood AI Agent — an autonomous assistant embedded in the Stonewood management dashboard. You have complete knowledge of the dashboard data below.
+
+DASHBOARD CONTEXT:
+${dashboardContext}
+
+YOUR CAPABILITIES:
+- Answer questions about tasks, priorities, owners, deadlines, and risks
+- Summarise workloads and priorities for specific team members
+- Draft emails, messages, and status updates in a professional tone
+- Identify risks, blockers, and overdue items
+- Provide executive briefings and weekly summaries
+- Suggest delegation improvements and accountability actions
+
+AGENT ACTIONS YOU CAN TRIGGER:
+When the user asks to filter or show specific items, include an action block at the END of your response like this:
+[ACTION:FILTER_OWNER:name] — to filter the delegation panel by owner
+[ACTION:FILTER_PRIORITY:Red|Amber|Green] — to filter by priority
+[ACTION:RESET_FILTERS] — to clear all filters
+[ACTION:SCROLL_TO:priorities|delegation|summaries|timeline|messages] — to scroll to a section
+
+STYLE:
+- Be concise and direct like a chief of staff
+- Use bullet points for lists
+- Bold key names and deadlines
+- When drafting messages, use a firm but professional tone matching the dashboard's style`;
+
+      const res = await fetch('https://api.anthropic.com/v1/messages', {
+        method:'POST',
+        headers:{
+          'Content-Type':'application/json',
+          'x-api-key': apiKey,
+          'anthropic-version':'2023-06-01',
+          'anthropic-dangerous-direct-browser-access':'true'
+        },
+        body: JSON.stringify({
+          model:'claude-sonnet-4-20250514',
+          max_tokens:1024,
+          system: systemPrompt,
+          messages: conversationHistory.slice(-10)
+        })
+      });
+
+      if(!res.ok){
+        const err = await res.json().catch(()=>({}));
+        throw new Error(err.error?.message || `API error ${res.status}`);
+      }
+
+      const data = await res.json();
+      const reply = data.content?.[0]?.text || 'No response received.';
+      conversationHistory.push({role:'assistant', content: reply});
+
+      // Extract and execute any actions from the response
+      const actionLines = reply.match(/\[ACTION:[^\]]+\]/g);
+      const cleanReply = reply.replace(/\[ACTION:[^\]]+\]/g,'').trim();
+
+      typing.classList.remove('active');
+      addMsg('assistant', formatMarkdown(cleanReply));
+
+      if(actionLines){
+        actionLines.forEach(a=>{
+          const parts = a.replace(/[\[\]]/g,'').split(':');
+          if(parts[1]==='FILTER_OWNER'){
+            document.getElementById('ownerFilter').value = parts[2] || 'All';
+            applyFilters();
+            flashPanel('delegationGrid');
+          } else if(parts[1]==='FILTER_PRIORITY'){
+            document.getElementById('priorityFilter').value = parts[2] || 'All';
+            applyFilters();
+            flashPanel('delegationGrid');
+          } else if(parts[1]==='RESET_FILTERS'){
+            resetFilters();
+          } else if(parts[1]==='SCROLL_TO'){
+            scrollToSection(parts[2]);
+          }
+        });
+      }
+    } catch(err){
+      typing.classList.remove('active');
+      addMsg('assistant', `<strong style="color:var(--red)">Error:</strong> ${err.message}`);
+    }
+    sendBtn.disabled=false;
+  };
+
+  function extractDashboardContext(){
+    const tasks = [];
+    document.querySelectorAll('#priorityGrid .task').forEach(el=>{
+      tasks.push({
+        priority: el.dataset.priority,
+        title: el.querySelector('h4')?.textContent,
+        description: el.querySelector('.small')?.textContent,
+        owners: el.dataset.owner
+      });
+    });
+    const delegations = [];
+    document.querySelectorAll('#delegationGrid .task').forEach(el=>{
+      delegations.push({
+        owner: el.dataset.owner,
+        priority: el.dataset.priority,
+        title: el.querySelector('h4')?.textContent,
+        deliverables: el.querySelector('.small')?.textContent,
+        deadline: el.querySelector('.quote')?.textContent
+      });
+    });
+    const summaries = [];
+    document.querySelectorAll('details').forEach(el=>{
+      summaries.push({
+        title: el.querySelector('summary span:first-child')?.textContent,
+        status: el.querySelector('.priority')?.textContent,
+        detail: el.querySelector('p')?.textContent
+      });
+    });
+    const timeline = [];
+    document.querySelectorAll('.timeitem').forEach(el=>{
+      timeline.push({
+        day: el.querySelector('strong')?.textContent,
+        goal: el.querySelector('p')?.textContent
+      });
+    });
+    const messages = [];
+    document.querySelectorAll('.card.section:last-of-type .task').forEach(el=>{
+      messages.push({
+        to: el.querySelector('h4')?.textContent,
+        message: el.querySelector('.small')?.textContent
+      });
+    });
+
+    return JSON.stringify({
+      kpis:{
+        operatingTheatres:5,
+        redItems:5,
+        primaryWeakness:'Too many decisions escalate to John and Michael',
+        immediateRequirements:10
+      },
+      priorityTasks: tasks,
+      delegations: delegations,
+      operatingSummaries: summaries,
+      weeklyTimeline: timeline,
+      suggestedMessages: messages,
+      managementIssue: 'Execution still gets completed by founder intervention rather than operating system. Over-centralisation is the core issue.'
+    }, null, 0);
+  }
+
+  function detectAction(text){
+    const t = text.toLowerCase();
+    const owners = ['dao','blair','vicki','max','israel','aj','paul','derek','esther','ava','john','michael'];
+    for(const o of owners){
+      if(t.includes('filter') && t.includes(o) || t.includes('show') && t.includes(o) && t.includes('task'))
+        return {type:'filter_owner', value: o.charAt(0).toUpperCase()+o.slice(1)};
+    }
+    if((t.includes('filter') || t.includes('show')) && t.includes('red')) return {type:'filter_priority', value:'Red'};
+    if((t.includes('filter') || t.includes('show')) && t.includes('amber')) return {type:'filter_priority', value:'Amber'};
+    if((t.includes('filter') || t.includes('show')) && t.includes('green')) return {type:'filter_priority', value:'Green'};
+    if(t.includes('reset') || t.includes('clear') || t.includes('show all')) return {type:'reset'};
+    return null;
+  }
+
+  function executeAction(action){
+    if(action.type==='filter_owner'){
+      document.getElementById('ownerFilter').value = action.value;
+      applyFilters();
+      flashPanel('delegationGrid');
+    } else if(action.type==='filter_priority'){
+      document.getElementById('priorityFilter').value = action.value;
+      applyFilters();
+      flashPanel('delegationGrid');
+    } else if(action.type==='reset'){
+      resetFilters();
+    }
+  }
+
+  function flashPanel(id){
+    const el = document.getElementById(id);
+    if(!el) return;
+    el.style.transition='box-shadow .3s';
+    el.style.boxShadow='0 0 20px rgba(110,168,254,.3)';
+    setTimeout(()=>{ el.style.boxShadow=''; },1500);
+  }
+
+  function scrollToSection(section){
+    const map = {
+      priorities: '#priorityGrid',
+      delegation: '#delegationGrid',
+      summaries: 'details',
+      timeline: '.timeline',
+      messages: '.card.section:last-of-type'
+    };
+    const sel = map[section];
+    if(sel){
+      const el = document.querySelector(sel);
+      if(el) el.scrollIntoView({behavior:'smooth', block:'start'});
+    }
+  }
+
+  function addMsg(role, html){
+    const div = document.createElement('div');
+    div.className = 'ai-msg ' + role;
+    div.innerHTML = html;
+    msgs.appendChild(div);
+    scrollMsgs();
+  }
+
+  function scrollMsgs(){
+    requestAnimationFrame(()=>{ msgs.scrollTop = msgs.scrollHeight; });
+  }
+
+  function formatMarkdown(text){
+    return text
+      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\*(.*?)\*/g, '<em>$1</em>')
+      .replace(/`(.*?)`/g, '<code>$1</code>')
+      .replace(/^[-•]\s+(.+)/gm, '<span style="display:block;padding-left:12px;margin:2px 0">&#8226; $1</span>')
+      .replace(/^\d+\.\s+(.+)/gm, '<span style="display:block;padding-left:12px;margin:2px 0">$&</span>')
+      .replace(/\n{2,}/g, '<br/><br/>')
+      .replace(/\n/g, '<br/>');
+  }
+})();
+
 function applyFilters(){
   const owner = document.getElementById('ownerFilter').value.toLowerCase();
   const priority = document.getElementById('priorityFilter').value.toLowerCase();
