@@ -314,6 +314,94 @@
     }
     .ai-quick:hover{border-color:var(--blue);color:var(--text)}
 
+    /* ── Voice Input ── */
+    .ai-voice{
+      width:40px;height:40px;border-radius:12px;border:none;cursor:pointer;
+      background:var(--panel-2);border:1px solid var(--line);
+      display:flex;align-items:center;justify-content:center;
+      transition:transform .15s,background .2s,border-color .2s;flex-shrink:0;
+    }
+    .ai-voice:hover{transform:scale(1.05);border-color:var(--blue)}
+    .ai-voice svg{width:18px;height:18px;fill:var(--muted);transition:fill .2s}
+    .ai-voice.recording{
+      background:rgba(255,107,107,.15);border-color:var(--red);
+      animation:voice-pulse 1s infinite;
+    }
+    .ai-voice.recording svg{fill:var(--red)}
+    @keyframes voice-pulse{0%,100%{box-shadow:0 0 0 0 rgba(255,107,107,.3)}50%{box-shadow:0 0 0 8px rgba(255,107,107,0)}}
+
+    /* ── Header Toolbar ── */
+    .ai-toolbar{
+      display:flex;gap:6px;margin-left:auto;
+    }
+    .ai-toolbar button{
+      width:30px;height:30px;border-radius:8px;border:1px solid var(--line);
+      background:var(--panel-2);cursor:pointer;
+      display:flex;align-items:center;justify-content:center;
+      transition:border-color .2s,background .2s;position:relative;
+    }
+    .ai-toolbar button:hover{border-color:var(--blue);background:rgba(110,168,254,.1)}
+    .ai-toolbar button svg{width:14px;height:14px;fill:var(--muted)}
+    .ai-toolbar button:hover svg{fill:var(--text)}
+    .ai-tooltip{
+      position:absolute;bottom:-28px;left:50%;transform:translateX(-50%);
+      background:#1a1a2e;color:var(--text);font-size:10px;padding:3px 8px;
+      border-radius:4px;white-space:nowrap;pointer-events:none;
+      opacity:0;transition:opacity .15s;
+    }
+    .ai-toolbar button:hover .ai-tooltip{opacity:1}
+
+    /* ── New Task Modal ── */
+    .ai-modal-overlay{
+      position:fixed;top:0;left:0;width:100%;height:100%;
+      background:rgba(0,0,0,.6);z-index:10000;
+      display:none;align-items:center;justify-content:center;
+      animation:fade-in .2s;
+    }
+    .ai-modal-overlay.active{display:flex}
+    @keyframes fade-in{from{opacity:0}to{opacity:1}}
+    .ai-modal{
+      background:var(--panel);border:1px solid var(--line);border-radius:18px;
+      padding:24px;width:420px;max-width:90vw;box-shadow:0 20px 60px rgba(0,0,0,.5);
+      animation:modal-in .25s ease-out;
+    }
+    @keyframes modal-in{from{opacity:0;transform:scale(.95) translateY(10px)}to{opacity:1;transform:scale(1) translateY(0)}}
+    .ai-modal h3{margin:0 0 16px;font-size:17px}
+    .ai-modal label{font-size:12px;color:var(--muted);display:block;margin:10px 0 4px}
+    .ai-modal input,.ai-modal select,.ai-modal textarea{
+      width:100%;background:var(--panel-2);color:var(--text);
+      border:1px solid var(--line);border-radius:10px;
+      padding:10px 12px;font-size:13px;font-family:inherit;
+    }
+    .ai-modal textarea{resize:vertical;min-height:60px}
+    .ai-modal input:focus,.ai-modal select:focus,.ai-modal textarea:focus{outline:none;border-color:var(--blue)}
+    .ai-modal-actions{display:flex;gap:10px;margin-top:18px;justify-content:flex-end}
+    .ai-modal-actions button{
+      padding:10px 18px;border-radius:10px;border:none;cursor:pointer;
+      font-weight:700;font-size:13px;transition:transform .15s;
+    }
+    .ai-modal-actions .cancel{background:var(--panel-2);color:var(--text);border:1px solid var(--line)}
+    .ai-modal-actions .confirm{background:linear-gradient(135deg,#6ea8fe,#a78bfa);color:#fff}
+    .ai-modal-actions button:hover{transform:scale(1.02)}
+
+    /* ── Chat History Badge ── */
+    .ai-history-count{
+      position:absolute;top:-4px;right:-4px;
+      background:var(--blue);color:#08101d;
+      font-size:9px;font-weight:800;
+      width:18px;height:18px;border-radius:50%;
+      display:flex;align-items:center;justify-content:center;
+    }
+
+    /* ── Export Toast ── */
+    .ai-toast{
+      position:fixed;bottom:100px;left:50%;transform:translateX(-50%);
+      background:var(--green);color:#08101d;
+      padding:10px 20px;border-radius:10px;font-size:13px;font-weight:700;
+      opacity:0;transition:opacity .3s;pointer-events:none;z-index:10001;
+    }
+    .ai-toast.show{opacity:1}
+
     @media(max-width:500px){
       .ai-panel{width:calc(100vw - 24px);right:12px;bottom:90px;max-height:70vh}
       .ai-fab{bottom:18px;right:18px;width:52px;height:52px}
@@ -640,6 +728,20 @@
       <h3>Stonewood AI Agent</h3>
       <small>Dispatch tasks in plain English</small>
     </div>
+    <div class="ai-toolbar">
+      <button onclick="openNewTask()" title="Create task">
+        <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+        <span class="ai-tooltip">New task</span>
+      </button>
+      <button onclick="exportChat()" title="Export chat">
+        <svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+        <span class="ai-tooltip">Export</span>
+      </button>
+      <button onclick="clearChat()" title="Clear chat">
+        <svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+        <span class="ai-tooltip">Clear</span>
+      </button>
+    </div>
   </div>
 
   <div class="ai-setup" id="aiSetup">
@@ -671,15 +773,60 @@
 
   <div class="ai-input-row" id="aiInputRow" style="display:none">
     <input type="text" id="aiInput" placeholder="Tell the agent what to do..." />
+    <button class="ai-voice" id="aiVoiceBtn" onclick="toggleVoice()" title="Voice input">
+      <svg viewBox="0 0 24 24"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm-1-9c0-.55.45-1 1-1s1 .45 1 1v6c0 .55-.45 1-1 1s-1-.45-1-1V5zm6 6c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg>
+    </button>
     <button class="ai-send" id="aiSendBtn" onclick="sendMessage()">
       <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
     </button>
   </div>
 </div>
 
+<!-- New Task Modal -->
+<div class="ai-modal-overlay" id="taskModal">
+  <div class="ai-modal">
+    <h3>Create New Task</h3>
+    <label>Task title</label>
+    <input type="text" id="newTaskTitle" placeholder="e.g. Follow up with tenant on lease terms" />
+    <label>Owner</label>
+    <select id="newTaskOwner">
+      <option value="Dao">Dao</option>
+      <option value="Blair">Blair</option>
+      <option value="Vicki">Vicki</option>
+      <option value="Max">Max</option>
+      <option value="Israel">Israel</option>
+      <option value="AJ">AJ</option>
+      <option value="Paul">Paul</option>
+      <option value="Derek">Derek</option>
+      <option value="Esther">Esther</option>
+      <option value="Ava">Ava</option>
+      <option value="John">John</option>
+      <option value="Michael">Michael</option>
+    </select>
+    <label>Priority</label>
+    <select id="newTaskPriority">
+      <option value="Red">Red</option>
+      <option value="Amber">Amber</option>
+      <option value="Green">Green</option>
+    </select>
+    <label>Deliverables</label>
+    <textarea id="newTaskDeliverables" placeholder="What needs to be delivered..."></textarea>
+    <label>Deadline</label>
+    <input type="text" id="newTaskDeadline" placeholder="e.g. Friday 5pm" />
+    <div class="ai-modal-actions">
+      <button class="cancel" onclick="closeTaskModal()">Cancel</button>
+      <button class="confirm" onclick="createTask()">Create Task</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast notification -->
+<div class="ai-toast" id="aiToast"></div>
+
 <script>
 /* ── AI Assistant Agent ── */
 (function(){
+  const STORAGE_KEY = 'stonewood_ai_chat';
   const fab = document.getElementById('aiFab');
   const panel = document.getElementById('aiPanel');
   const setup = document.getElementById('aiSetup');
@@ -691,11 +838,65 @@
   const typing = document.getElementById('aiTyping');
   let apiKey = '';
   let conversationHistory = [];
+  let recognition = null;
+  let isRecording = false;
+
+  // ── Persistent Chat History ──
+  function saveHistory(){
+    try{
+      const data = { messages: conversationHistory, timestamp: Date.now() };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    } catch(e){}
+  }
+
+  function loadHistory(){
+    try{
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if(!raw) return;
+      const data = JSON.parse(raw);
+      if(!data.messages || !data.messages.length) return;
+      conversationHistory = data.messages;
+      // Restore messages in the UI
+      conversationHistory.forEach(m=>{
+        const clean = m.role==='assistant'
+          ? formatMarkdown(m.content.replace(/\[ACTION:[^\]]+\]/g,'').trim())
+          : escapeHtml(m.content);
+        addMsgSilent(m.role, clean);
+      });
+    } catch(e){}
+  }
+
+  function addMsgSilent(role, html){
+    const div = document.createElement('div');
+    div.className = 'ai-msg ' + role;
+    div.style.animation = 'none';
+    div.innerHTML = html;
+    msgs.appendChild(div);
+  }
+
+  // ── Restore saved API key ──
+  function saveApiKey(key){
+    try{ localStorage.setItem('stonewood_ai_key', key); } catch(e){}
+  }
+  function loadApiKey(){
+    try{ return localStorage.getItem('stonewood_ai_key') || ''; } catch(e){ return ''; }
+  }
+
+  // Auto-connect if key is saved
+  const savedKey = loadApiKey();
+  if(savedKey){
+    apiKey = savedKey;
+    setup.style.display='none';
+    msgs.style.display='flex';
+    quickActions.style.display='flex';
+    inputRow.style.display='flex';
+    loadHistory();
+  }
 
   fab.addEventListener('click', ()=>{
     const open = panel.classList.toggle('visible');
     fab.classList.toggle('open', open);
-    if(open && apiKey) input.focus();
+    if(open && apiKey){ input.focus(); scrollMsgs(); }
   });
 
   input.addEventListener('keydown', e=>{
@@ -706,10 +907,12 @@
     const key = document.getElementById('aiApiKey').value.trim();
     if(!key){ alert('Please enter your Anthropic API key.'); return; }
     apiKey = key;
+    saveApiKey(key);
     setup.style.display='none';
     msgs.style.display='flex';
     quickActions.style.display='flex';
     inputRow.style.display='flex';
+    loadHistory();
     input.focus();
   };
 
@@ -718,10 +921,148 @@
     sendMessage();
   };
 
+  // ── Voice Input (Web Speech API) ──
+  window.toggleVoice = function(){
+    const voiceBtn = document.getElementById('aiVoiceBtn');
+    if(!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)){
+      showToast('Voice input not supported in this browser');
+      return;
+    }
+    if(isRecording){
+      recognition.stop();
+      return;
+    }
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    recognition = new SpeechRecognition();
+    recognition.continuous = false;
+    recognition.interimResults = true;
+    recognition.lang = 'en-US';
+
+    recognition.onstart = ()=>{
+      isRecording = true;
+      voiceBtn.classList.add('recording');
+      input.placeholder = 'Listening...';
+    };
+    recognition.onresult = (e)=>{
+      let transcript = '';
+      for(let i = e.resultIndex; i < e.results.length; i++){
+        transcript += e.results[i][0].transcript;
+      }
+      input.value = transcript;
+    };
+    recognition.onend = ()=>{
+      isRecording = false;
+      voiceBtn.classList.remove('recording');
+      input.placeholder = 'Tell the agent what to do...';
+      if(input.value.trim()) sendMessage();
+    };
+    recognition.onerror = (e)=>{
+      isRecording = false;
+      voiceBtn.classList.remove('recording');
+      input.placeholder = 'Tell the agent what to do...';
+      if(e.error !== 'no-speech') showToast('Voice error: ' + e.error);
+    };
+    recognition.start();
+  };
+
+  // ── Export Chat ──
+  window.exportChat = function(){
+    if(!conversationHistory.length){
+      showToast('No messages to export');
+      return;
+    }
+    let md = '# Stonewood AI Agent — Chat Export\n';
+    md += '**Exported:** ' + new Date().toLocaleString() + '\n\n---\n\n';
+    conversationHistory.forEach(m=>{
+      const label = m.role === 'user' ? 'You' : 'AI Agent';
+      const content = m.content.replace(/\[ACTION:[^\]]+\]/g,'').trim();
+      md += `### ${label}\n${content}\n\n---\n\n`;
+    });
+
+    const blob = new Blob([md], {type:'text/markdown'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'stonewood-ai-chat-' + new Date().toISOString().slice(0,10) + '.md';
+    a.click();
+    URL.revokeObjectURL(url);
+    showToast('Chat exported as Markdown');
+  };
+
+  // ── Clear Chat ──
+  window.clearChat = function(){
+    conversationHistory = [];
+    // Keep only the welcome message
+    msgs.innerHTML = `<div class="ai-msg assistant">
+      <strong>Stonewood AI Agent online.</strong><br/>
+      I have full context of your dashboard — tasks, owners, priorities, and deadlines. Tell me what to do in plain English.<br/><br/>
+      Try: <em>"Show me all red items for Dao"</em> or <em>"Draft a follow-up message to Paul about Willis Street"</em>
+    </div>`;
+    localStorage.removeItem(STORAGE_KEY);
+    showToast('Chat history cleared');
+  };
+
+  // ── Task Creation ──
+  window.openNewTask = function(){
+    document.getElementById('taskModal').classList.add('active');
+  };
+  window.closeTaskModal = function(){
+    document.getElementById('taskModal').classList.remove('active');
+  };
+  window.createTask = function(){
+    const title = document.getElementById('newTaskTitle').value.trim();
+    const owner = document.getElementById('newTaskOwner').value;
+    const priority = document.getElementById('newTaskPriority').value;
+    const deliverables = document.getElementById('newTaskDeliverables').value.trim();
+    const deadline = document.getElementById('newTaskDeadline').value.trim();
+
+    if(!title){ alert('Please enter a task title.'); return; }
+
+    // Build task HTML
+    const priorityClass = priority.toLowerCase();
+    const searchText = [title, deliverables, deadline].join(' ').toLowerCase();
+    const taskHtml = `
+      <div class="task delegate" data-owner="${owner}" data-priority="${priority}" data-text="${searchText}" style="animation:msg-in .3s ease-out;border:1px solid var(--blue)">
+        <span class="priority ${priorityClass}">${priority}</span>
+        <h4>${escapeHtml(owner)} — ${escapeHtml(title)}</h4>
+        <p class="small"><strong>Deliverables:</strong> ${escapeHtml(deliverables || 'TBD')}</p>
+        ${deadline ? '<div class="quote">Deadline: '+escapeHtml(deadline)+'</div>' : ''}
+      </div>`;
+
+    document.getElementById('delegationGrid').insertAdjacentHTML('beforeend', taskHtml);
+
+    // Add confirmation to chat
+    addMsg('assistant', `<strong>Task created:</strong> ${escapeHtml(title)}<br/>
+      <span style="display:inline-block;margin-top:4px" class="priority ${priorityClass}">${priority}</span>
+      Owner: <strong>${owner}</strong>${deadline ? ' | Deadline: <strong>'+escapeHtml(deadline)+'</strong>' : ''}`);
+
+    // Clear form and close
+    document.getElementById('newTaskTitle').value='';
+    document.getElementById('newTaskDeliverables').value='';
+    document.getElementById('newTaskDeadline').value='';
+    closeTaskModal();
+    showToast('Task added to delegation panel');
+    flashPanel('delegationGrid');
+  };
+
+  // Close modal on overlay click
+  document.getElementById('taskModal').addEventListener('click', function(e){
+    if(e.target === this) closeTaskModal();
+  });
+
+  // ── Toast Notification ──
+  function showToast(text){
+    const toast = document.getElementById('aiToast');
+    toast.textContent = text;
+    toast.classList.add('show');
+    setTimeout(()=>{ toast.classList.remove('show'); }, 2500);
+  }
+
+  // ── Send Message (enhanced with persistence) ──
   window.sendMessage = async function(){
     const text = input.value.trim();
     if(!text) return;
-    addMsg('user', text);
+    addMsg('user', escapeHtml(text));
     input.value='';
     sendBtn.disabled=true;
 
@@ -731,6 +1072,7 @@
 
     // Send to Claude API for intelligent response
     conversationHistory.push({role:'user', content: text});
+    saveHistory();
     typing.classList.add('active');
     scrollMsgs();
 
@@ -748,6 +1090,7 @@ YOUR CAPABILITIES:
 - Identify risks, blockers, and overdue items
 - Provide executive briefings and weekly summaries
 - Suggest delegation improvements and accountability actions
+- Create new tasks when asked (guide the user to use the + button or provide details)
 
 AGENT ACTIONS YOU CAN TRIGGER:
 When the user asks to filter or show specific items, include an action block at the END of your response like this:
@@ -755,6 +1098,7 @@ When the user asks to filter or show specific items, include an action block at 
 [ACTION:FILTER_PRIORITY:Red|Amber|Green] — to filter by priority
 [ACTION:RESET_FILTERS] — to clear all filters
 [ACTION:SCROLL_TO:priorities|delegation|summaries|timeline|messages] — to scroll to a section
+[ACTION:CREATE_TASK:owner|priority|title|deliverables|deadline] — to create a new task
 
 STYLE:
 - Be concise and direct like a chief of staff
@@ -786,6 +1130,7 @@ STYLE:
       const data = await res.json();
       const reply = data.content?.[0]?.text || 'No response received.';
       conversationHistory.push({role:'assistant', content: reply});
+      saveHistory();
 
       // Extract and execute any actions from the response
       const actionLines = reply.match(/\[ACTION:[^\]]+\]/g);
@@ -809,15 +1154,33 @@ STYLE:
             resetFilters();
           } else if(parts[1]==='SCROLL_TO'){
             scrollToSection(parts[2]);
+          } else if(parts[1]==='CREATE_TASK'){
+            const taskParts = parts.slice(2).join(':').split('|');
+            if(taskParts.length >= 3) createTaskFromAgent(taskParts[0],taskParts[1],taskParts[2],taskParts[3]||'',taskParts[4]||'');
           }
         });
       }
     } catch(err){
       typing.classList.remove('active');
-      addMsg('assistant', `<strong style="color:var(--red)">Error:</strong> ${err.message}`);
+      addMsg('assistant', `<strong style="color:var(--red)">Error:</strong> ${escapeHtml(err.message)}`);
     }
     sendBtn.disabled=false;
   };
+
+  function createTaskFromAgent(owner, priority, title, deliverables, deadline){
+    const priorityClass = priority.toLowerCase();
+    const searchText = [title, deliverables, deadline].join(' ').toLowerCase();
+    const taskHtml = `
+      <div class="task delegate" data-owner="${escapeAttr(owner)}" data-priority="${escapeAttr(priority)}" data-text="${escapeAttr(searchText)}" style="animation:msg-in .3s ease-out;border:1px solid var(--blue)">
+        <span class="priority ${priorityClass}">${escapeHtml(priority)}</span>
+        <h4>${escapeHtml(owner)} — ${escapeHtml(title)}</h4>
+        <p class="small"><strong>Deliverables:</strong> ${escapeHtml(deliverables || 'TBD')}</p>
+        ${deadline ? '<div class="quote">Deadline: '+escapeHtml(deadline)+'</div>' : ''}
+      </div>`;
+    document.getElementById('delegationGrid').insertAdjacentHTML('beforeend', taskHtml);
+    flashPanel('delegationGrid');
+    showToast('Task created by AI Agent');
+  }
 
   function extractDashboardContext(){
     const tasks = [];
@@ -939,6 +1302,16 @@ STYLE:
 
   function scrollMsgs(){
     requestAnimationFrame(()=>{ msgs.scrollTop = msgs.scrollHeight; });
+  }
+
+  function escapeHtml(text){
+    const d = document.createElement('div');
+    d.textContent = text;
+    return d.innerHTML;
+  }
+
+  function escapeAttr(text){
+    return text.replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/'/g,'&#39;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   }
 
   function formatMarkdown(text){
