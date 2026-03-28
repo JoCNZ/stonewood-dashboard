@@ -504,6 +504,171 @@
     .chart-bar .bar-label{font-size:10px;color:var(--muted);margin-top:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
     .chart-bar .bar-count{font-size:11px;font-weight:700;margin-bottom:4px}
 
+    /* ── Workflow Email Panel ── */
+    .mail-toggle{
+      position:fixed;top:18px;right:68px;z-index:9999;
+      width:44px;height:44px;border-radius:12px;border:1px solid var(--line);
+      background:var(--panel);cursor:pointer;
+      display:flex;align-items:center;justify-content:center;
+      transition:transform .2s,background .3s,border-color .3s;
+      box-shadow:var(--shadow);
+    }
+    .mail-toggle:hover{transform:scale(1.08)}
+    .mail-toggle svg{width:20px;height:20px;fill:var(--text);transition:fill .3s}
+
+    .mail-overlay{
+      position:fixed;top:0;left:0;width:100%;height:100%;
+      background:rgba(0,0,0,.6);z-index:10002;
+      display:none;align-items:center;justify-content:center;
+      animation:fade-in .2s;
+    }
+    .mail-overlay.active{display:flex}
+    .mail-panel{
+      background:var(--panel);border:1px solid var(--line);border-radius:20px;
+      width:520px;max-width:92vw;max-height:85vh;
+      box-shadow:0 20px 60px rgba(0,0,0,.5);
+      animation:modal-in .25s ease-out;
+      display:flex;flex-direction:column;overflow:hidden;
+    }
+    .mail-panel-header{
+      padding:18px 22px;border-bottom:1px solid var(--line);
+      display:flex;align-items:center;justify-content:space-between;
+    }
+    .mail-panel-header h3{margin:0;font-size:17px}
+    .mail-close{
+      width:32px;height:32px;border-radius:8px;border:1px solid var(--line);
+      background:var(--panel-2);cursor:pointer;
+      display:flex;align-items:center;justify-content:center;
+    }
+    .mail-close:hover{border-color:var(--blue)}
+    .mail-close svg{width:16px;height:16px;fill:var(--muted)}
+
+    .mail-tabs{
+      display:flex;border-bottom:1px solid var(--line);
+    }
+    .mail-tab{
+      flex:1;padding:12px;text-align:center;
+      font-size:14px;font-weight:600;color:var(--muted);
+      cursor:pointer;border-bottom:2px solid transparent;
+      transition:color .2s,border-color .2s;background:none;border-top:none;border-left:none;border-right:none;
+    }
+    .mail-tab.active{color:var(--text);border-bottom-color:var(--blue)}
+    .mail-tab:hover{color:var(--text)}
+
+    .mail-body{
+      flex:1;overflow-y:auto;padding:18px 22px;
+    }
+    .mail-body::-webkit-scrollbar{width:5px}
+    .mail-body::-webkit-scrollbar-thumb{background:var(--line);border-radius:10px}
+
+    .mail-section{
+      background:var(--panel-2);border:1px solid var(--line);
+      border-radius:14px;padding:16px;margin-bottom:16px;
+    }
+    .mail-section-title{
+      font-size:13px;font-weight:700;margin:0 0 4px;
+    }
+    .mail-section-desc{
+      font-size:12px;color:var(--muted);margin:0 0 12px;
+    }
+
+    .mail-item{
+      background:var(--panel);border:1px solid var(--line);
+      border-radius:10px;padding:12px 14px;margin-bottom:8px;
+      display:flex;align-items:flex-start;justify-content:space-between;gap:10px;
+    }
+    .mail-item:last-child{margin-bottom:0}
+    .mail-item-info{flex:1;min-width:0}
+    .mail-item-email{
+      font-size:13px;font-weight:600;color:var(--text);
+      word-break:break-all;
+    }
+    .mail-item-instructions{
+      font-size:12px;color:var(--muted);margin-top:4px;
+      display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;
+      overflow:hidden;
+    }
+    .mail-item-actions{
+      display:flex;gap:4px;flex-shrink:0;
+    }
+    .mail-item-btn{
+      width:28px;height:28px;border-radius:6px;border:1px solid var(--line);
+      background:var(--panel-2);cursor:pointer;
+      display:flex;align-items:center;justify-content:center;
+      transition:border-color .2s;
+    }
+    .mail-item-btn:hover{border-color:var(--blue)}
+    .mail-item-btn svg{width:14px;height:14px;fill:var(--muted)}
+    .mail-item-btn:hover svg{fill:var(--text)}
+    .mail-item-btn.danger:hover{border-color:var(--red)}
+    .mail-item-btn.danger:hover svg{fill:var(--red)}
+
+    .mail-add-btn{
+      width:100%;padding:10px;border-radius:10px;
+      border:1px dashed var(--line);background:transparent;
+      color:var(--muted);font-size:13px;font-weight:600;
+      cursor:pointer;transition:border-color .2s,color .2s;
+      display:flex;align-items:center;justify-content:center;gap:6px;
+    }
+    .mail-add-btn:hover{border-color:var(--blue);color:var(--text)}
+    .mail-add-btn svg{width:14px;height:14px;fill:currentColor}
+
+    .mail-form{
+      background:var(--panel);border:1px solid var(--line);
+      border-radius:10px;padding:14px;margin-bottom:8px;
+    }
+    .mail-form label{
+      font-size:12px;color:var(--muted);display:block;margin:0 0 4px;
+    }
+    .mail-form label:not(:first-child){margin-top:10px}
+    .mail-form input,.mail-form textarea{
+      width:100%;background:var(--panel-2);color:var(--text);
+      border:1px solid var(--line);border-radius:8px;
+      padding:9px 11px;font-size:13px;font-family:inherit;
+    }
+    .mail-form textarea{resize:vertical;min-height:70px}
+    .mail-form input:focus,.mail-form textarea:focus{outline:none;border-color:var(--blue)}
+    .mail-form-actions{
+      display:flex;gap:8px;margin-top:12px;justify-content:flex-end;
+    }
+    .mail-form-actions button{
+      padding:8px 16px;border-radius:8px;border:none;cursor:pointer;
+      font-weight:600;font-size:12px;transition:transform .15s;
+    }
+    .mail-form-actions .cancel{background:var(--panel-2);color:var(--text);border:1px solid var(--line)}
+    .mail-form-actions .save{background:linear-gradient(135deg,#6ea8fe,#a78bfa);color:#fff}
+    .mail-form-actions button:hover{transform:scale(1.02)}
+
+    .mail-inbox-empty{
+      text-align:center;padding:40px 20px;color:var(--muted);
+    }
+    .mail-inbox-empty svg{width:48px;height:48px;fill:var(--line);margin-bottom:12px}
+    .mail-inbox-empty p{margin:0;font-size:13px}
+
+    .mail-info-banner{
+      background:var(--panel-2);border:1px solid var(--line);
+      border-radius:12px;padding:14px 16px;margin-bottom:16px;
+      display:flex;align-items:flex-start;gap:12px;
+    }
+    .mail-info-banner svg{width:36px;height:36px;fill:var(--muted);flex-shrink:0;margin-top:2px}
+    .mail-info-banner p{margin:0;font-size:12px;color:var(--muted);line-height:1.5}
+
+    .mail-inbox-item{
+      background:var(--panel);border:1px solid var(--line);
+      border-radius:10px;padding:14px;margin-bottom:8px;
+    }
+    .mail-inbox-item .from{font-size:12px;color:var(--muted)}
+    .mail-inbox-item .subject{font-size:14px;font-weight:600;margin:4px 0}
+    .mail-inbox-item .preview{font-size:12px;color:var(--muted);line-height:1.4}
+    .mail-inbox-item .meta{
+      display:flex;gap:8px;margin-top:8px;align-items:center;
+    }
+    .mail-inbox-item .workflow-tag{
+      background:var(--chip);border:1px solid var(--line);
+      padding:3px 8px;border-radius:999px;font-size:11px;color:var(--muted);
+    }
+    .mail-inbox-item .time{font-size:11px;color:var(--muted)}
+
     /* ── Light mode overrides for priority badges ── */
     [data-theme="light"] .red{background:rgba(220,38,38,.1);color:#dc2626;border-color:rgba(220,38,38,.3)}
     [data-theme="light"] .amber{background:rgba(217,119,6,.1);color:#d97706;border-color:rgba(217,119,6,.3)}
@@ -550,6 +715,7 @@
     <div class="kb-row"><span>Export chat</span><span class="kb-key">Ctrl + E</span></div>
     <div class="kb-row"><span>Voice input</span><span class="kb-key">Ctrl + M</span></div>
     <div class="kb-row"><span>Clear chat</span><span class="kb-key">Ctrl + L</span></div>
+    <div class="kb-row"><span>Workflow email</span><span class="kb-key">Ctrl + W</span></div>
     <div class="kb-row"><span>Show shortcuts</span><span class="kb-key">Ctrl + /</span></div>
     <div class="kb-row"><span>Close any overlay</span><span class="kb-key">Esc</span></div>
     <div style="text-align:center;margin-top:14px">
@@ -882,6 +1048,78 @@
   </div>
 
   <div class="footer">Interactive HTML prepared from the prior email review summary.</div>
+</div>
+
+<!-- ── Workflow Email Panel ── -->
+<button class="mail-toggle" id="mailToggle" onclick="toggleMailPanel()" title="Workflow Email (Ctrl+W)">
+  <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+</button>
+
+<div class="mail-overlay" id="mailOverlay">
+  <div class="mail-panel">
+    <div class="mail-panel-header">
+      <h3>Mail Stonewood</h3>
+      <button class="mail-close" onclick="toggleMailPanel()">
+        <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+      </button>
+    </div>
+
+    <div class="mail-info-banner">
+      <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+      <p>Email Stonewood to create a task. Forward emails to workflow addresses to auto-process them with custom instructions.</p>
+    </div>
+
+    <div class="mail-tabs">
+      <button class="mail-tab active" onclick="switchMailTab('settings')" id="mailTabSettings">Settings</button>
+      <button class="mail-tab" onclick="switchMailTab('inbox')" id="mailTabInbox">Inbox</button>
+    </div>
+
+    <div class="mail-body" id="mailBodySettings">
+      <!-- Main email -->
+      <div class="mail-section">
+        <div class="mail-section-title">Stonewood's email</div>
+        <div class="mail-section-desc">Send emails to this address to create tasks</div>
+        <div class="mail-item">
+          <div class="mail-item-info">
+            <div class="mail-item-email">stonewood@dashboard.local</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Workflow emails -->
+      <div class="mail-section">
+        <div class="mail-section-title" style="display:flex;align-items:center;gap:6px">Workflow email <span style="color:var(--muted);font-weight:400;font-size:11px;cursor:help" title="Customize email addresses and instructions to process different tasks">&#9432;</span></div>
+        <div class="mail-section-desc">Customize email addresses and instructions to process different tasks.</div>
+        <div id="workflowEmailList"></div>
+        <div id="workflowEmailForm" style="display:none"></div>
+        <button class="mail-add-btn" onclick="showAddWorkflowForm()" id="addWorkflowBtn">
+          <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+          Add workflow email
+        </button>
+      </div>
+
+      <!-- Approved senders -->
+      <div class="mail-section">
+        <div class="mail-section-title">Approved senders</div>
+        <div class="mail-section-desc">Only emails sent from these addresses can create tasks.</div>
+        <div id="approvedSenderList"></div>
+        <div id="approvedSenderForm" style="display:none"></div>
+        <button class="mail-add-btn" onclick="showAddSenderForm()" id="addSenderBtn">
+          <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+          Add approved sender
+        </button>
+      </div>
+    </div>
+
+    <div class="mail-body" id="mailBodyInbox" style="display:none">
+      <div id="mailInboxContent">
+        <div class="mail-inbox-empty">
+          <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+          <p>No emails received yet.<br/>Forward emails to your workflow addresses to see them here.</p>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- ── AI Assistant Agent Widget ── -->
@@ -1519,6 +1757,283 @@ STYLE:
   }
 })();
 
+/* ── Workflow Email Management ── */
+(function(){
+  const WF_KEY = 'stonewood_workflow_emails';
+  const SENDER_KEY = 'stonewood_approved_senders';
+  const INBOX_KEY = 'stonewood_mail_inbox';
+
+  function loadData(key, fallback){
+    try{ const d = localStorage.getItem(key); return d ? JSON.parse(d) : fallback; } catch(e){ return fallback; }
+  }
+  function saveData(key, data){
+    try{ localStorage.setItem(key, JSON.stringify(data)); } catch(e){}
+  }
+
+  let workflows = loadData(WF_KEY, [
+    { id:'wf1', name:'280takeover', email:'stonewood-280takeover@dashboard.local',
+      instructions:'When an email is received at this address, create a new task in the \'280QS Radisson Takeover\' project in the dashboard with Red priority.' },
+    { id:'wf2', name:'notion', email:'stonewood-notion@dashboard.local',
+      instructions:'STONEWOOD GROUP NOTION AUTO-SAVE WORKFLOW\n\nSave all forwarded email content into the Notion workspace under the appropriate project page.' }
+  ]);
+  let senders = loadData(SENDER_KEY, [
+    { id:'s1', email:'oecltd@gmail.com' },
+    { id:'s2', email:'john.chow@stonewoodgroup.co.nz' }
+  ]);
+  let inbox = loadData(INBOX_KEY, []);
+
+  function genId(){ return 'id_' + Date.now() + '_' + Math.random().toString(36).slice(2,8); }
+
+  window.toggleMailPanel = function(){
+    const overlay = document.getElementById('mailOverlay');
+    overlay.classList.toggle('active');
+    if(overlay.classList.contains('active')) renderAll();
+  };
+
+  window.switchMailTab = function(tab){
+    const settingsTab = document.getElementById('mailTabSettings');
+    const inboxTab = document.getElementById('mailTabInbox');
+    const settingsBody = document.getElementById('mailBodySettings');
+    const inboxBody = document.getElementById('mailBodyInbox');
+    if(tab === 'settings'){
+      settingsTab.classList.add('active');
+      inboxTab.classList.remove('active');
+      settingsBody.style.display = '';
+      inboxBody.style.display = 'none';
+    } else {
+      inboxTab.classList.add('active');
+      settingsTab.classList.remove('active');
+      inboxBody.style.display = '';
+      settingsBody.style.display = 'none';
+      renderInbox();
+    }
+  };
+
+  function renderWorkflows(){
+    const list = document.getElementById('workflowEmailList');
+    if(!workflows.length){ list.innerHTML = ''; return; }
+    list.innerHTML = workflows.map(wf => `
+      <div class="mail-item">
+        <div class="mail-item-info">
+          <div class="mail-item-email">${esc(wf.email)}</div>
+          <div class="mail-item-instructions">${esc(wf.instructions)}</div>
+        </div>
+        <div class="mail-item-actions">
+          <button class="mail-item-btn" onclick="editWorkflow('${wf.id}')" title="Edit">
+            <svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 000-1.41l-2.34-2.34a1 1 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+          </button>
+          <button class="mail-item-btn danger" onclick="deleteWorkflow('${wf.id}')" title="Delete">
+            <svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+          </button>
+        </div>
+      </div>`).join('');
+  }
+
+  function renderSenders(){
+    const list = document.getElementById('approvedSenderList');
+    if(!senders.length){ list.innerHTML = ''; return; }
+    list.innerHTML = senders.map(s => `
+      <div class="mail-item">
+        <div class="mail-item-info">
+          <div class="mail-item-email">${esc(s.email)}</div>
+        </div>
+        <div class="mail-item-actions">
+          <button class="mail-item-btn danger" onclick="deleteSender('${s.id}')" title="Delete">
+            <svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+          </button>
+        </div>
+      </div>`).join('');
+  }
+
+  function renderInbox(){
+    const container = document.getElementById('mailInboxContent');
+    if(!inbox.length){
+      container.innerHTML = `<div class="mail-inbox-empty">
+        <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+        <p>No emails received yet.<br/>Forward emails to your workflow addresses to see them here.</p>
+      </div>`;
+      return;
+    }
+    container.innerHTML = inbox.map(item => `
+      <div class="mail-inbox-item">
+        <div class="from">From: ${esc(item.from)}</div>
+        <div class="subject">${esc(item.subject)}</div>
+        <div class="preview">${esc(item.preview)}</div>
+        <div class="meta">
+          <span class="workflow-tag">${esc(item.workflow || 'General')}</span>
+          <span class="time">${esc(item.time)}</span>
+        </div>
+      </div>`).join('');
+  }
+
+  function renderAll(){ renderWorkflows(); renderSenders(); }
+
+  window.showAddWorkflowForm = function(editId){
+    const formContainer = document.getElementById('workflowEmailForm');
+    const addBtn = document.getElementById('addWorkflowBtn');
+    const existing = editId ? workflows.find(w=>w.id===editId) : null;
+    const nameVal = existing ? existing.name : '';
+    const instrVal = existing ? existing.instructions : '';
+
+    formContainer.style.display = '';
+    addBtn.style.display = 'none';
+    formContainer.innerHTML = `
+      <div class="mail-form">
+        <label>Email address name</label>
+        <div style="display:flex;align-items:center;gap:0;margin-bottom:2px">
+          <span style="font-size:12px;color:var(--muted);white-space:nowrap;padding:9px 6px 9px 0">stonewood-</span>
+          <input type="text" id="wfNameInput" placeholder="e.g. newsletter" value="${escAttr(nameVal)}" style="flex:1;border-radius:8px 0 0 8px"/>
+          <span style="font-size:12px;color:var(--muted);white-space:nowrap;padding:9px 6px;background:var(--panel-2);border:1px solid var(--line);border-left:none;border-radius:0 8px 8px 0">@dashboard.local</span>
+        </div>
+        <label>Instructions</label>
+        <textarea id="wfInstrInput" placeholder="Gather information sources for the daily newsletter and organize them into slides.">${esc(instrVal)}</textarea>
+        <p style="font-size:11px;color:var(--muted);margin:8px 0 0">Emails sent to this address will create tasks with the instructions above.</p>
+        <div class="mail-form-actions">
+          <button class="cancel" onclick="hideWorkflowForm()">Cancel</button>
+          <button class="save" onclick="saveWorkflow('${editId||''}')">${existing?'Update':'Save'}</button>
+        </div>
+      </div>`;
+    document.getElementById('wfNameInput').focus();
+  };
+
+  window.hideWorkflowForm = function(){
+    document.getElementById('workflowEmailForm').style.display = 'none';
+    document.getElementById('workflowEmailForm').innerHTML = '';
+    document.getElementById('addWorkflowBtn').style.display = '';
+  };
+
+  window.saveWorkflow = function(editId){
+    const name = document.getElementById('wfNameInput').value.trim();
+    const instr = document.getElementById('wfInstrInput').value.trim();
+    if(!name){ alert('Please enter an email name.'); return; }
+
+    if(editId){
+      const wf = workflows.find(w=>w.id===editId);
+      if(wf){ wf.name = name; wf.email = 'stonewood-'+name+'@dashboard.local'; wf.instructions = instr; }
+    } else {
+      workflows.push({ id: genId(), name, email: 'stonewood-'+name+'@dashboard.local', instructions: instr });
+    }
+    saveData(WF_KEY, workflows);
+    hideWorkflowForm();
+    renderWorkflows();
+    showMailToast(editId ? 'Workflow email updated' : 'Workflow email added');
+  };
+
+  window.editWorkflow = function(id){ showAddWorkflowForm(id); };
+
+  window.deleteWorkflow = function(id){
+    if(!confirm('Delete this workflow email?')) return;
+    workflows = workflows.filter(w=>w.id!==id);
+    saveData(WF_KEY, workflows);
+    renderWorkflows();
+    showMailToast('Workflow email deleted');
+  };
+
+  window.showAddSenderForm = function(){
+    const formContainer = document.getElementById('approvedSenderForm');
+    const addBtn = document.getElementById('addSenderBtn');
+    formContainer.style.display = '';
+    addBtn.style.display = 'none';
+    formContainer.innerHTML = `
+      <div class="mail-form">
+        <label>Email address</label>
+        <input type="email" id="senderEmailInput" placeholder="e.g. user@company.com"/>
+        <div class="mail-form-actions">
+          <button class="cancel" onclick="hideSenderForm()">Cancel</button>
+          <button class="save" onclick="saveSender()">Save</button>
+        </div>
+      </div>`;
+    document.getElementById('senderEmailInput').focus();
+  };
+
+  window.hideSenderForm = function(){
+    document.getElementById('approvedSenderForm').style.display = 'none';
+    document.getElementById('approvedSenderForm').innerHTML = '';
+    document.getElementById('addSenderBtn').style.display = '';
+  };
+
+  window.saveSender = function(){
+    const email = document.getElementById('senderEmailInput').value.trim();
+    if(!email){ alert('Please enter an email address.'); return; }
+    if(senders.some(s=>s.email.toLowerCase()===email.toLowerCase())){
+      alert('This sender is already approved.'); return;
+    }
+    senders.push({ id: genId(), email });
+    saveData(SENDER_KEY, senders);
+    hideSenderForm();
+    renderSenders();
+    showMailToast('Approved sender added');
+  };
+
+  window.deleteSender = function(id){
+    if(!confirm('Remove this approved sender?')) return;
+    senders = senders.filter(s=>s.id!==id);
+    saveData(SENDER_KEY, senders);
+    renderSenders();
+    showMailToast('Approved sender removed');
+  };
+
+  window.simulateIncomingEmail = function(from, subject, preview, workflowName){
+    const isApproved = senders.some(s=>s.email.toLowerCase()===from.toLowerCase());
+    if(!isApproved){
+      showMailToast('Rejected: sender not approved');
+      return;
+    }
+    const workflow = workflowName
+      ? workflows.find(w=>w.name.toLowerCase()===workflowName.toLowerCase())
+      : null;
+
+    const item = {
+      id: genId(), from, subject, preview,
+      workflow: workflow ? workflow.name : 'General',
+      time: new Date().toLocaleString(),
+      instructions: workflow ? workflow.instructions : ''
+    };
+    inbox.unshift(item);
+    saveData(INBOX_KEY, inbox);
+
+    if(workflow && workflow.instructions){
+      const taskTitle = subject || 'Email task: ' + workflow.name;
+      const searchText = [taskTitle, preview, workflow.name].join(' ').toLowerCase();
+      const taskHtml = `
+        <div class="task delegate" data-owner="Ava" data-priority="Amber" data-text="${escAttr(searchText)}" style="animation:msg-in .3s ease-out;border:1px solid var(--blue)">
+          <span class="priority amber">Amber</span>
+          <h4>Email Task — ${esc(taskTitle)}</h4>
+          <p class="small"><strong>From:</strong> ${esc(from)} | <strong>Workflow:</strong> ${esc(workflow.name)}<br/>${esc(preview)}</p>
+          <div class="quote">Instructions: ${esc(workflow.instructions.substring(0, 100))}${workflow.instructions.length > 100 ? '...' : ''}</div>
+        </div>`;
+      document.getElementById('delegationGrid').insertAdjacentHTML('beforeend', taskHtml);
+    }
+
+    showMailToast('Email received and processed');
+    renderInbox();
+  };
+
+  function showMailToast(text){
+    const toast = document.getElementById('aiToast');
+    toast.textContent = text;
+    toast.classList.add('show');
+    setTimeout(()=>{ toast.classList.remove('show'); }, 2500);
+  }
+
+  function esc(text){
+    if(!text) return '';
+    const d = document.createElement('div');
+    d.textContent = text;
+    return d.innerHTML;
+  }
+  function escAttr(text){
+    if(!text) return '';
+    return text.replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/'/g,'&#39;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  document.getElementById('mailOverlay').addEventListener('click', function(e){
+    if(e.target === this) toggleMailPanel();
+  });
+
+  renderAll();
+})();
+
 /* ── Theme Toggle ── */
 window.toggleTheme = function(){
   const html = document.documentElement;
@@ -1544,6 +2059,8 @@ document.addEventListener('keydown', function(e){
   if(e.key === 'Escape'){
     document.getElementById('kbOverlay').classList.remove('active');
     document.getElementById('taskModal').classList.remove('active');
+    const mailOv = document.getElementById('mailOverlay');
+    if(mailOv.classList.contains('active')){ mailOv.classList.remove('active'); return; }
     const panel = document.getElementById('aiPanel');
     if(panel.classList.contains('visible')){
       panel.classList.remove('visible');
@@ -1576,6 +2093,10 @@ document.addEventListener('keydown', function(e){
   if((e.ctrlKey || e.metaKey) && e.key === 'l'){
     e.preventDefault();
     if(typeof clearChat === 'function') clearChat();
+  }
+  if((e.ctrlKey || e.metaKey) && e.key === 'w'){
+    e.preventDefault();
+    if(typeof toggleMailPanel === 'function') toggleMailPanel();
   }
   if((e.ctrlKey || e.metaKey) && e.key === '/'){
     e.preventDefault();
